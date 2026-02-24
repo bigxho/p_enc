@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card fortress-card text-center p-5 shadow-lg border-primary">
+            <div id="mfa_icon" class="mb-4">
+                <div class="display-1 text-primary animate-pulse">🔑</div>
+            </div>
+            
+            <h2 id="mfa_title">In attesa del sensore...</h2>
+            <p id="mfa_msg" class="lead text-muted">
+                Tocca il tuo sensore biometrico o inserisci la tua chiave di sicurezza per confermare l'identità.
+            </div>
+
+            <div id="mfa_error" class="alert alert-danger d-none mt-3">
+                </div>
+
+            <div class="mt-4">
+                <a href="{% url 'dashboard_sicurezza' %}" class="btn btn-outline-secondary">Annulla Operazione</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Animazione a pulsazione per l'icona della chiave */
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.7; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    .animate-pulse {
+        animation: pulse 2s infinite ease-in-out;
+    }
+</style>
+
+<script type="text/javascript">
+    // django-mfa2 inietterà qui i dati della sfida (challenge)
+    // Questo script cattura gli eventi per aggiornare l'interfaccia
+    document.addEventListener("DOMContentLoaded", function() {
+        const title = document.getElementById('mfa_title');
+        const icon = document.getElementById('mfa_icon');
+
+        // Se la libreria mfa.js è presente, possiamo agganciare gli eventi
+        // Nota: django-mfa2 include i propri script, qui aggiungiamo solo il feedback visivo
+        window.addEventListener('mfa_success', function() {
+            title.innerText = "Verifica Completata!";
+            icon.innerHTML = '<div class="display-1 text-success">✅</div>';
+        });
+
+        window.addEventListener('mfa_failed', function() {
+            title.innerText = "Autenticazione Fallita";
+            icon.innerHTML = '<div class="display-1 text-danger">❌</div>';
+            document.getElementById('mfa_error').classList.remove('d-none');
+            document.getElementById('mfa_error').innerText = "Il sensore non ha risposto correttamente o l'operazione è stata annullata.";
+        });
+    });
+</script>
+{% endblock %}
