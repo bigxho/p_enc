@@ -1,0 +1,22 @@
+config --global user.email "bigxho15@gmail.com"
+(penv) PS I:\Manuals\Python\project\p_enc> git config --global user.name "BlackWood"          
+(penv) PS I:\Manuals\Python\project\p_enc> git commit -m "First deploy: Protection Data"
+
+
+git init
+git add .
+git commit -m "First deploy: Protection Data"
+
+
+
+
+# Sostituisci con il tuo link reale
+git remote add origin https://github.com/bigxho/p_enc.git
+git remote add origin https://github.com/bigxho/p_enc_v2.git
+
+
+# Rinomina il ramo principale in 'main'
+git branch -M main
+
+# Carica i file su GitHub
+git push -u origin main

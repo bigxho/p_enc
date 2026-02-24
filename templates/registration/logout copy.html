@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="text-center mt-5">
+    <h3>Sei uscito dalla Fortezza.</h3>
+    <p>La tua sessione è stata terminata e le chiavi di accesso rimosse dalla memoria.</p>
+    <a href="{% url 'login' %}" class="btn btn-primary">Accedi di nuovo</a>
+</div>
+{% endblock %}
