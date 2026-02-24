@@ -20,3 +20,115 @@ git branch -M main
 
 # Carica i file su GitHub
 git push -u origin main
+
+
+4. Un ultimo controllo: i "Branch"
+A volte l'errore capita perché GitHub chiama il ramo principale main e la tua macchina locale lo chiama master.
+Controlla con:
+
+Bash
+git branch
+Se vedi un asterisco su master, rinominalo in main per essere in sincrono con GitHub:
+
+Bash
+git branch -M main
+Prova a lanciare git pull origin main --rebase. Se ti escono scritte strane o errori di conflitto, incollameli qui e li risolviamo insieme!
+
+*******************************************************
+# Rimuovi il vecchio collegamento
+git remote remove origin
+
+# Aggiungilo di nuovo (usa SSH se hai configurato la chiave, altrimenti HTTPS)
+git remote add origin https://github.com/TUO_UTENTE/NOME_REPO.git
+
+# Carica forzando il ramo principale
+git push -u origin main
+
+
++++++++++++++++++++++++++++++++++++++++++++
+Messaggio di errore,Cosa fare
+error: failed to push some refs,Qualcuno ha modificato i file su GitHub. 
+Esegui: git pull --rebase origin main :e poi riprova il push.
+remote: Repository not found,L'URL del repository è sbagliato o non hai 
+i permessi (controlla maiuscole/minuscole).
+Everything up-to-date,Hai dimenticato di fare git add e git commit prima del push.
+
+
+-------------------------------------
+Cosa fare se GitHub ti dà errore durante il push?
+Se provi a caricare sul main e ricevi un errore, 
+molto probabilmente è perché i file online sono diversi da quelli locali. Risolvi così:
+
+git pull origin main --rebase (scarica le modifiche online e mette le tue "sopra")
+
+git push origin main
+
+Vuoi che ti aiuti a creare uno script Python che aggiorna automaticamente il numero di versione nel README ogni volta che lanci un comando?
+
+//////////////////////////////////////
+In informatica e nello sviluppo software, incrementare le versioni non è solo cambiare un numero, ma seguire una logica che aiuti te (e Traefik/Docker) a capire cosa è cambiato.
+
+Il metodo standard si chiama **Semantic Versioning (SemVer)**.
+
+---
+
+## 1. La logica del SemVer: $X.Y.Z$
+
+Il numero di versione si compone di tre cifre: **v1.2.3**
+
+* **MAJOR ($X$):** Incrementi questa cifra quando fai cambiamenti **drastici** che rompono la compatibilità (es. passi da Traefik v2 a v3).
+* **MINOR ($Y$):** La incrementi quando aggiungi **nuove funzionalità** ma tutto quello che c'era prima continua a funzionare (es. aggiungi un nuovo container WordPress).
+* **PATCH ($Z$):** La incrementi per **bug fix** o piccoli aggiustamenti (es. hai corretto un errore nel file `requirements.txt`).
+
+---
+
+## 2. Come gestirlo con Git (I Tag)
+
+Su GitHub, non basta scrivere la versione in un file di testo. Si usano i **Tag**, che sono dei "segnalibri" immutabili nella storia del tuo codice.
+
+Ecco i comandi per creare una versione:
+
+1. **Crea un tag locale:**
+```bash
+git tag -a v1.0.0 -m "Versione stabile iniziale"
+
+```
+
+
+2. **Spingi il tag su GitHub:**
+```bash
+git push origin v1.0.0
+
+```
+
+
+
+> **Perché farlo?** Su GitHub apparirà una sezione **"Releases"** sulla destra. Se un giorno rompi tutto sulla VPS, potrai dire a Docker di scaricare esattamente la `v1.0.0` che sapevi funzionare perfettamente.
+
+---
+
+## 3. Incrementare le versioni in Docker
+
+Nello script `docker-compose.yml` che abbiamo scritto prima, abbiamo usato `image: wordpress:latest`. Questo è comodo ma pericoloso, perché "latest" cambia sempre.
+
+Per gestire meglio le versioni, dovresti fare così:
+
+* **Usa versioni specifiche:** Invece di `latest`, usa `wordpress:6.4`.
+* **Versiona i tuoi script:** Se crei una tua immagine personalizzata, caricala con un tag:
+```bash
+docker build -t mio-utente/mio-progetto:v1.0.1 .
+
+```
+
+
+
+---
+
+## 4. Automazione (Opzionale ma utile)
+
+Se il tuo progetto Python diventa grande, puoi usare un comando per automatizzare l'incremento:
+
+1. Installa `bump2version` (o simili).
+2. Lanci un comando come `bumpversion minor` e lui aggiornerà automaticamente il numero di versione in tutti i tuoi file (`setup.py`, `__init__.py`, ecc.) e creerà il tag Git per te.
+
+**Stai pensando di versionare la tua configurazione di Traefik o il codice Python che ha il file `requirements.txt`?** Se mi dici quale dei due, posso darti uno schema di numerazione specifico.
