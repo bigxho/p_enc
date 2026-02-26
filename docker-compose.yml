@@ -5,11 +5,11 @@ services:
     container_name: my_sqlite_app
     restart: always
     environment:
-      - DATABASE_URL=./data/db.sqlite
+      - DATABASE_URL=db.sqlite
       - NODE_ENV=production
     volumes:
       # Mappiamo la cartella data per rendere il database persistente
-      - ./data:./data
+      - ./data:/
     networks:
       - proxy
     labels:
