@@ -1,5 +1,0 @@
-root26
-MilkLatea26@
-
-export FERNET_KEY='oqHDpAtkAnfC8fAXrvh_Ega_-XW6EtNbDRQ5guMt4fc='
-python manage.py runserver
